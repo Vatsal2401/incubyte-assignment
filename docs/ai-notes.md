@@ -32,6 +32,12 @@ corrected an AI suggestion.
 | 2026-05-30 | Analytics headcount helpers | AI could DRY `headcountByCountry`/`ByDepartment` into one parameterized method | Kept them explicit — parameterizing Prisma's typed `groupBy` forces an untyped cast; a little duplication beat the wrong (untyped) abstraction. |
 | 2026-05-30 | Combined analytics endpoint | Three separate endpoints | One `GET /analytics/overview` running 3 aggregations via `Promise.all` — one round-trip for the dashboard, better UX. |
 
+| 2026-05-30 | UI: product dashboard | Started with a single-page layout | Redesigned into a **multi-page, sidebar-driven dashboard** (React Router) after researching shadcn/admin-dashboard patterns: config-first nav with active state, shared `AppShell` (sidebar + header + outlet), light/dark theme, recharts visualizations. Adapted Next.js route-group guidance to our Vite + React Router stack. |
+
+### Research notes — dashboard UI
+
+Before the redesign I researched current admin-dashboard best practices (shadcn/ui sidebar blocks, freeCodeCamp/BetterLink guides). Key patterns adopted: navigation defined as **data** (`config/nav.ts`) and rendered by the sidebar; **active state from the router pathname** (`isActivePath`, unit-tested); a **shared layout shell** so pages don't duplicate chrome; **icon + text** nav for accessibility; responsive sidebar (off-canvas on mobile). Deliberately built the sidebar as owned Tailwind components rather than pulling the full Radix-based shadcn Sidebar block, to keep the dependency surface small.
+
 ### Lessons / corrections during the build
 
 - **Run the *full* gate, not just `vitest`.** SWC transpiles tests without type-checking, so a Prisma `groupBy` mock-typing error passed the test run but failed `tsc`. Fixed with a typed mock cast (`fix:` commit) and now run typecheck+lint+test each cycle. This is exactly why the `/verify` gate exists.
