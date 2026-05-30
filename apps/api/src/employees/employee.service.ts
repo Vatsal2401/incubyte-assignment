@@ -7,6 +7,7 @@ import {
   DEFAULT_PAGE_SIZE,
   ListEmployeesQuery,
   Paginated,
+  UpdateEmployeeInput,
 } from './employee.types';
 
 @Injectable()
@@ -23,6 +24,16 @@ export class EmployeeService {
       throw new NotFoundException(`Employee ${id} not found`);
     }
     return employee;
+  }
+
+  async update(id: string, input: UpdateEmployeeInput): Promise<Employee> {
+    await this.findOne(id);
+    return this.prisma.employee.update({ where: { id }, data: input });
+  }
+
+  async deactivate(id: string): Promise<Employee> {
+    await this.findOne(id);
+    return this.prisma.employee.update({ where: { id }, data: { status: 'inactive' } });
   }
 
   async list(query: ListEmployeesQuery): Promise<Paginated<Employee>> {

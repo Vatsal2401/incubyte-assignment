@@ -11,6 +11,8 @@ export interface CreateEmployeeInput {
   hireDate: Date;
 }
 
+export type UpdateEmployeeInput = Partial<CreateEmployeeInput>;
+
 export interface ListEmployeesQuery {
   page?: number;
   pageSize?: number;
