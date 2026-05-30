@@ -82,5 +82,38 @@ describe('EmployeeService', () => {
       );
       expect(result).toMatchObject({ total: 120, page: 3, pageSize: 20 });
     });
+
+    it('composes country, department and salary-range filters into the where clause', async () => {
+      prisma.employee.findMany.mockResolvedValue([] as never);
+      prisma.employee.count.mockResolvedValue(0 as never);
+
+      await service.list({
+        country: 'IN',
+        department: 'Engineering',
+        salaryMin: 1_000_000,
+        salaryMax: 5_000_000,
+      });
+
+      expect(prisma.employee.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            country: 'IN',
+            department: 'Engineering',
+            salaryMinor: { gte: 1_000_000, lte: 5_000_000 },
+          },
+        }),
+      );
+    });
+
+    it('omits the salary filter when no bounds are given', async () => {
+      prisma.employee.findMany.mockResolvedValue([] as never);
+      prisma.employee.count.mockResolvedValue(0 as never);
+
+      await service.list({ country: 'US' });
+
+      expect(prisma.employee.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { country: 'US' } }),
+      );
+    });
   });
 });
