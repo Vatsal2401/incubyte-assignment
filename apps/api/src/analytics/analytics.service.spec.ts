@@ -51,4 +51,26 @@ describe('AnalyticsService', () => {
       ]);
     });
   });
+
+  describe('headcountByCountry', () => {
+    it('counts active employees per country, most populous first', async () => {
+      prisma.employee.groupBy.mockResolvedValue([
+        { country: 'IN', _count: { _all: 5 } },
+        { country: 'US', _count: { _all: 3 } },
+      ] as never);
+
+      const result = await service.headcountByCountry();
+
+      expect(prisma.employee.groupBy).toHaveBeenCalledWith({
+        by: ['country'],
+        where: { status: 'active' },
+        _count: { _all: true },
+        orderBy: { _count: { country: 'desc' } },
+      });
+      expect(result).toEqual([
+        { key: 'IN', headcount: 5 },
+        { key: 'US', headcount: 3 },
+      ]);
+    });
+  });
 });
