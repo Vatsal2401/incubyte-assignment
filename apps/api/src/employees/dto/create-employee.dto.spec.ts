@@ -41,7 +41,7 @@ describe('CreateEmployeeDto', () => {
   });
 
   it('rejects a missing required field', () => {
-    const { name: _omitted, ...withoutName } = valid;
+    const { name, ...withoutName } = valid;
     expect(invalidProps(withoutName)).toContain('name');
   });
 });
