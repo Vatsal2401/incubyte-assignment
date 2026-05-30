@@ -14,6 +14,9 @@ export class Money {
   ) {}
 
   static fromMinor(amountMinor: number, currency: CurrencyCode): Money {
+    if (!Number.isInteger(amountMinor)) {
+      throw new InvalidMoneyError('amount must be an integer');
+    }
     if (amountMinor < 0) {
       throw new InvalidMoneyError('amount cannot be negative');
     }
