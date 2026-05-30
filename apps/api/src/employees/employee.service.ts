@@ -28,7 +28,7 @@ export class EmployeeService {
   async list(query: ListEmployeesQuery): Promise<Paginated<Employee>> {
     const page = query.page ?? DEFAULT_PAGE;
     const pageSize = query.pageSize ?? DEFAULT_PAGE_SIZE;
-    const where: Prisma.EmployeeWhereInput = {};
+    const where = this.buildWhere(query);
 
     const [items, total] = await Promise.all([
       this.prisma.employee.findMany({
@@ -41,5 +41,22 @@ export class EmployeeService {
     ]);
 
     return { items, total, page, pageSize };
+  }
+
+  private buildWhere(query: ListEmployeesQuery): Prisma.EmployeeWhereInput {
+    const where: Prisma.EmployeeWhereInput = {};
+    if (query.country) {
+      where.country = query.country;
+    }
+    if (query.department) {
+      where.department = query.department;
+    }
+    if (query.salaryMin !== undefined || query.salaryMax !== undefined) {
+      where.salaryMinor = {
+        ...(query.salaryMin !== undefined ? { gte: query.salaryMin } : {}),
+        ...(query.salaryMax !== undefined ? { lte: query.salaryMax } : {}),
+      };
+    }
+    return where;
   }
 }
