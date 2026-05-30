@@ -38,8 +38,8 @@ export function EmployeesPage(): JSX.Element {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="flex h-full flex-col gap-4 px-4 py-6 lg:px-8">
+      <div className="flex shrink-0 items-center justify-between">
         <p className="text-sm text-muted-foreground">
           {page ? `${page.total.toLocaleString()} employees` : 'Loading…'}
         </p>
@@ -48,9 +48,11 @@ export function EmployeesPage(): JSX.Element {
         </Button>
       </div>
 
-      <Card>
-        <CardContent className="space-y-4 pt-6">
-          <EmployeeFilters filters={filters} onChange={patchFilters} />
+      <Card className="flex min-h-0 flex-1 flex-col">
+        <CardContent className="flex min-h-0 flex-1 flex-col gap-4 pt-6">
+          <div className="shrink-0">
+            <EmployeeFilters filters={filters} onChange={patchFilters} />
+          </div>
 
           {employeesQuery.isError ? (
             <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-6 text-sm text-destructive">
@@ -58,18 +60,22 @@ export function EmployeesPage(): JSX.Element {
             </div>
           ) : (
             <>
-              <EmployeeTable
-                employees={page?.items ?? []}
-                onEdit={openEdit}
-                onDeactivate={(e) => deactivate.mutate(e.id)}
-              />
-              {page && (
-                <Pagination
-                  page={page.page}
-                  pageSize={page.pageSize}
-                  total={page.total}
-                  onPageChange={(p) => patchFilters({ page: p })}
+              <div className="min-h-0 flex-1 overflow-hidden rounded-md border">
+                <EmployeeTable
+                  employees={page?.items ?? []}
+                  onEdit={openEdit}
+                  onDeactivate={(e) => deactivate.mutate(e.id)}
                 />
+              </div>
+              {page && (
+                <div className="shrink-0">
+                  <Pagination
+                    page={page.page}
+                    pageSize={page.pageSize}
+                    total={page.total}
+                    onPageChange={(p) => patchFilters({ page: p })}
+                  />
+                </div>
               )}
             </>
           )}

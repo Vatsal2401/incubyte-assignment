@@ -13,7 +13,7 @@ export function Header({ onMenuClick }: HeaderProps): JSX.Element {
   const active = NAV_ITEMS.find((item) => isActivePath(pathname, item.href)) ?? NAV_ITEMS[0];
 
   return (
-    <header className="sticky top-0 z-30 border-b bg-background/80 backdrop-blur">
+    <header className="shrink-0 border-b bg-background">
       <div className="flex h-16 items-center gap-3 px-4 lg:px-8">
         <Button
           variant="ghost"

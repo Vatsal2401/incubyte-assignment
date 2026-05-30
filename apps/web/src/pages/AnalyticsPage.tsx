@@ -1,4 +1,5 @@
 import { BarCard } from '@/components/charts/BarCard';
+import { PageBody } from '@/components/layout/PageBody';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -16,18 +17,24 @@ export function AnalyticsPage(): JSX.Element {
 
   if (isError) {
     return (
-      <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-6 text-sm text-destructive">
-        Failed to load analytics. Is the API running?
-      </div>
+      <PageBody>
+        <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-6 text-sm text-destructive">
+          Failed to load analytics. Is the API running?
+        </div>
+      </PageBody>
     );
   }
 
   if (isLoading || !data) {
-    return <div className="h-64 animate-pulse rounded-lg border bg-muted/50" />;
+    return (
+      <PageBody>
+        <div className="h-64 animate-pulse rounded-lg border bg-muted/50" />
+      </PageBody>
+    );
   }
 
   return (
-    <div className="space-y-6">
+    <PageBody className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Salary statistics by currency</CardTitle>
@@ -81,6 +88,6 @@ export function AnalyticsPage(): JSX.Element {
           color="hsl(var(--chart-1))"
         />
       </div>
-    </div>
+    </PageBody>
   );
 }

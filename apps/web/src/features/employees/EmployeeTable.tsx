@@ -27,8 +27,8 @@ export function EmployeeTable({ employees, onEdit, onDeactivate }: EmployeeTable
   }
 
   return (
-    <Table>
-      <TableHeader>
+    <Table containerClassName="h-full">
+      <TableHeader className="sticky top-0 z-10 bg-card">
         <TableRow>
           <TableHead>Name</TableHead>
           <TableHead>Title</TableHead>

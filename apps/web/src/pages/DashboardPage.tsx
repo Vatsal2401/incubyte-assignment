@@ -2,6 +2,7 @@ import { Building2, Globe2, Landmark, Users } from 'lucide-react';
 import { StatCard } from '@/components/StatCard';
 import { BarCard } from '@/components/charts/BarCard';
 import { DonutCard } from '@/components/charts/DonutCard';
+import { PageBody } from '@/components/layout/PageBody';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAnalytics } from '@/features/analytics/useAnalytics';
 import { type CurrencyCode, formatMoney } from '@/lib/format';
@@ -11,19 +12,23 @@ export function DashboardPage(): JSX.Element {
 
   if (isError) {
     return (
-      <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-6 text-sm text-destructive">
-        Failed to load analytics. Is the API running?
-      </div>
+      <PageBody>
+        <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-6 text-sm text-destructive">
+          Failed to load analytics. Is the API running?
+        </div>
+      </PageBody>
     );
   }
 
   if (isLoading || !data) {
     return (
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {Array.from({ length: 4 }).map((_unused, i) => (
-          <div key={i} className="h-24 animate-pulse rounded-lg border bg-muted/50" />
-        ))}
-      </div>
+      <PageBody>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_unused, i) => (
+            <div key={i} className="h-24 animate-pulse rounded-lg border bg-muted/50" />
+          ))}
+        </div>
+      </PageBody>
     );
   }
 
@@ -31,7 +36,7 @@ export function DashboardPage(): JSX.Element {
   const topDepartment = data.byDepartment[0];
 
   return (
-    <div className="space-y-6">
+    <PageBody className="space-y-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard icon={Users} label="Active headcount" value={totalHeadcount.toLocaleString()} />
         <StatCard icon={Globe2} label="Countries" value={String(data.byCountry.length)} />
@@ -72,6 +77,6 @@ export function DashboardPage(): JSX.Element {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </PageBody>
   );
 }

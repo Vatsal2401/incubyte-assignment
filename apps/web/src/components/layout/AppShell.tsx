@@ -7,11 +7,11 @@ export function AppShell(): JSX.Element {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-muted/40">
+    <div className="flex h-screen overflow-hidden bg-muted/40">
       <Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
-      <div className="lg:pl-64">
+      <div className="flex min-w-0 flex-1 flex-col lg:pl-64">
         <Header onMenuClick={() => setMobileOpen(true)} />
-        <main className="mx-auto max-w-7xl px-4 py-6 lg:px-8">
+        <main className="min-h-0 flex-1">
           <Outlet />
         </main>
       </div>
