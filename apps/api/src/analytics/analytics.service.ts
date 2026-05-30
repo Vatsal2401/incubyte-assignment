@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CurrencySummary } from './analytics.types';
+import { CurrencySummary, GroupCount } from './analytics.types';
 
 const ACTIVE = { status: 'active' };
 
@@ -31,5 +31,15 @@ export class AnalyticsService {
       minMinor: g._min.salaryMinor ?? 0,
       maxMinor: g._max.salaryMinor ?? 0,
     }));
+  }
+
+  async headcountByCountry(): Promise<GroupCount[]> {
+    const groups = await this.prisma.employee.groupBy({
+      by: ['country'],
+      where: ACTIVE,
+      _count: { _all: true },
+      orderBy: { _count: { country: 'desc' } },
+    });
+    return groups.map((g) => ({ key: g.country, headcount: g._count._all }));
   }
 }
