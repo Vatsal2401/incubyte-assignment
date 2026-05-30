@@ -1,3 +1,5 @@
+import { InvalidMoneyError } from './errors';
+
 export type CurrencyCode = 'USD' | 'INR' | 'EUR' | 'GBP' | 'AUD';
 
 /**
@@ -12,6 +14,9 @@ export class Money {
   ) {}
 
   static fromMinor(amountMinor: number, currency: CurrencyCode): Money {
+    if (amountMinor < 0) {
+      throw new InvalidMoneyError('amount cannot be negative');
+    }
     return new Money(amountMinor, currency);
   }
 
