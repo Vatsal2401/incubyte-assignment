@@ -50,7 +50,7 @@ Core jobs from the requirements doc — each built test-first.
 
 | # | Deliverable | Status | Notes |
 |---|---|---|---|
-| 5.1 | **Fully functional deployed software** | ⬜ | Dockerfile + host (Render/Fly/Railway). **Needs a hosting account decision.** |
+| 5.1 | **Fully functional deployed software** | ✅ | docker-compose (api + web + caddy) on a GCP VM; live at https://incubyte-assignment.autoreels.in (Vercel DNS + auto TLS) |
 | 5.2 | **Video demo** of the software | ⬜ | I'll write a demo script; **recording needs the user**. |
 | 5.3 | Meaningful, fast, deterministic **unit tests** | 🚧 | Vitest, test-first |
 | 5.4 | Good structure, readability, maintainability | 🚧 | layered, strict TS, ESLint |

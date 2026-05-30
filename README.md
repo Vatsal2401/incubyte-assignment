@@ -7,9 +7,15 @@ manage salary data and answer questions about how the org pays people.
 > Built as an Incubyte take-home with **strict TDD** and **incremental commits** — the git
 > history is meant to be read top-to-bottom to see how the solution evolved.
 
+## Live demo
+
+👉 **https://incubyte-assignment.autoreels.in**
+
+Seeded with 10,000 employees. Try the dashboard, filter the employee table, add/edit a record, and toggle dark mode.
+
 ## Status
 
-🚧 Early scaffolding. See [`docs/requirements.md`](docs/requirements.md) for scope.
+✅ Functional end-to-end and deployed. See [`docs/requirements.md`](docs/requirements.md) for scope.
 
 ## Tech Stack
 
@@ -40,8 +46,29 @@ Development was driven through a committed Claude Code workflow in [`.claude/`](
 
 See [`docs/ai-notes.md`](docs/ai-notes.md) for the decision log and trade-offs.
 
+## Deployment
+
+The whole stack runs via **docker-compose** — each app has its own Dockerfile:
+
+```
+caddy   (apps … official image) → HTTPS (auto Let's Encrypt), routes / → web, /api → api
+web     (apps/web/Dockerfile)   → Vite build served by nginx
+api     (apps/api/Dockerfile)   → NestJS + Prisma; SQLite on a named volume; migrates + seeds on first boot
+```
+
+```bash
+# On any Docker host (DNS A-record → host IP, ports 80/443 open):
+git clone https://github.com/Vatsal2401/incubyte-assignment.git
+cd incubyte-assignment
+docker compose up -d --build      # build images and start all services
+```
+
+Live instance: a GCP VM running this compose stack, with `incubyte-assignment.autoreels.in`
+pointed at it via Vercel DNS; Caddy provisions and renews the TLS certificate automatically.
+
 ## Documentation
 
 - [`docs/requirements.md`](docs/requirements.md) — one-page requirements (goal, scope, what's left out)
 - [`docs/architecture.md`](docs/architecture.md) — architecture diagram + trade-offs
 - [`docs/ai-notes.md`](docs/ai-notes.md) — AI usage notes & decision log
+- [`docs/plan.md`](docs/plan.md) — delivery checklist mapping every requirement
