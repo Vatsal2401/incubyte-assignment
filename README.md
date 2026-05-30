@@ -29,11 +29,20 @@ Seeded with 10,000 employees. Try the dashboard, filter the employee table, add/
 ```bash
 npm install                 # install workspaces
 cp .env.example apps/api/.env
+npm run db:setup            # create the SQLite db + apply migrations
 npm run seed                # seed 10,000 employees (deterministic)
-npm run dev                 # run api + web concurrently
+npm run dev                 # run api (:3000) + web (:5173) concurrently
 ```
 
-> Scripts are wired up as the app is built — see [`CLAUDE.md`](CLAUDE.md) for the command contract.
+Then open http://localhost:5173. Other useful commands:
+
+```bash
+npm test                    # run all unit tests (api + web)
+npm run typecheck           # strict TypeScript check across both apps
+npm run build               # production build of both apps
+```
+
+> See [`CLAUDE.md`](CLAUDE.md) for the full command contract.
 
 ## How This Was Built (AI usage)
 

@@ -13,6 +13,7 @@
     "test": "npm run test --workspaces --if-present",
     "test:watch": "npm run test:watch --workspace @acme/api",
     "build": "npm run build --workspaces --if-present",
+    "db:setup": "npm run db:deploy --workspace @acme/api",
     "seed": "npm run seed --workspace @acme/api",
     "dev": "concurrently -n api,web -c blue,magenta \"npm run dev --workspace @acme/api\" \"npm run dev --workspace @acme/web\"",
     "build:web:prod": "VITE_API_BASE_URL=/api npm run build --workspace @acme/web",
