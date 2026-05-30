@@ -53,6 +53,42 @@ describe('EmployeeService', () => {
     await expect(service.findOne('missing')).rejects.toThrow(NotFoundException);
   });
 
+  it('updates an existing employee', async () => {
+    const existing = { id: 'emp_1', status: 'active', ...baseInput };
+    prisma.employee.findUnique.mockResolvedValue(existing as never);
+    const updated = { ...existing, jobTitle: 'Principal Engineer' };
+    prisma.employee.update.mockResolvedValue(updated as never);
+
+    const result = await service.update('emp_1', { jobTitle: 'Principal Engineer' });
+
+    expect(prisma.employee.update).toHaveBeenCalledWith({
+      where: { id: 'emp_1' },
+      data: { jobTitle: 'Principal Engineer' },
+    });
+    expect(result).toEqual(updated);
+  });
+
+  it('throws NotFound when updating a missing employee', async () => {
+    prisma.employee.findUnique.mockResolvedValue(null as never);
+
+    await expect(service.update('missing', { jobTitle: 'X' })).rejects.toThrow(NotFoundException);
+    expect(prisma.employee.update).not.toHaveBeenCalled();
+  });
+
+  it('deactivates an employee by setting status to inactive', async () => {
+    const existing = { id: 'emp_1', status: 'active', ...baseInput };
+    prisma.employee.findUnique.mockResolvedValue(existing as never);
+    prisma.employee.update.mockResolvedValue({ ...existing, status: 'inactive' } as never);
+
+    const result = await service.deactivate('emp_1');
+
+    expect(prisma.employee.update).toHaveBeenCalledWith({
+      where: { id: 'emp_1' },
+      data: { status: 'inactive' },
+    });
+    expect(result.status).toBe('inactive');
+  });
+
   describe('list', () => {
     const row = { id: 'emp_1', status: 'active', ...baseInput };
 
