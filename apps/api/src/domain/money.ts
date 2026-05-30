@@ -23,6 +23,10 @@ export class Money {
     return new Money(amountMinor, currency);
   }
 
+  add(other: Money): Money {
+    return Money.fromMinor(this.amountMinor + other.amountMinor, this.currency);
+  }
+
   format(): string {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
