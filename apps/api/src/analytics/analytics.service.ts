@@ -42,4 +42,14 @@ export class AnalyticsService {
     });
     return groups.map((g) => ({ key: g.country, headcount: g._count._all }));
   }
+
+  async headcountByDepartment(): Promise<GroupCount[]> {
+    const groups = await this.prisma.employee.groupBy({
+      by: ['department'],
+      where: ACTIVE,
+      _count: { _all: true },
+      orderBy: { _count: { department: 'desc' } },
+    });
+    return groups.map((g) => ({ key: g.department, headcount: g._count._all }));
+  }
 }
