@@ -29,8 +29,9 @@ describe('AnalyticsDashboard', () => {
   it('shows total headcount across currencies', () => {
     render(<AnalyticsDashboard overview={overview} />);
 
-    expect(screen.getByText('Total headcount')).toBeInTheDocument();
-    expect(screen.getByText('5')).toBeInTheDocument();
+    // Scope to the stat card so we don't collide with other "5"s on the page.
+    const card = screen.getByText('Total headcount').parentElement;
+    expect(card).toHaveTextContent('5');
   });
 
   it('shows total spend per currency, formatted', () => {
