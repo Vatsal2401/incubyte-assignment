@@ -1,0 +1,33 @@
+// Prisma schema. SQLite for zero-setup dev; kept Postgres-portable
+// (no SQLite-only types; currency/status are validated strings, not native enums,
+// so swapping the datasource to Postgres is a provider + URL change only).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Employee {
+  id          String   @id @default(cuid())
+  name        String
+  email       String   @unique
+  jobTitle    String
+  department  String
+  country     String // ISO-3166 alpha-2, e.g. "US", "IN"
+  currency    String // ISO-4217, validated against a known set at the app layer
+  salaryMinor Int // annual gross salary in minor units (cents) — never a float
+  status      String   @default("active") // "active" | "inactive"
+  hireDate    DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Indexes backing the filter / sort / analytics paths at 10k+ rows.
+  @@index([department])
+  @@index([country])
+  @@index([status])
+  @@index([salaryMinor])
+}
