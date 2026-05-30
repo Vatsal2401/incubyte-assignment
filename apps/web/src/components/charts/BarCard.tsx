@@ -41,9 +41,10 @@ export function BarCard({ title, data, color = 'hsl(var(--chart-1))' }: BarCardP
                 borderRadius: 8,
                 border: '1px solid hsl(var(--border))',
                 background: 'hsl(var(--popover))',
-                color: 'hsl(var(--popover-foreground))',
                 fontSize: 12,
               }}
+              itemStyle={{ color: 'hsl(var(--popover-foreground))' }}
+              labelStyle={{ color: 'hsl(var(--popover-foreground))' }}
             />
             <Bar dataKey="headcount" fill={color} radius={[0, 4, 4, 0]} barSize={18} />
           </BarChart>

@@ -48,9 +48,10 @@ export function DonutCard({ title, data }: DonutCardProps): JSX.Element {
                 borderRadius: 8,
                 border: '1px solid hsl(var(--border))',
                 background: 'hsl(var(--popover))',
-                color: 'hsl(var(--popover-foreground))',
                 fontSize: 12,
               }}
+              itemStyle={{ color: 'hsl(var(--popover-foreground))' }}
+              labelStyle={{ color: 'hsl(var(--popover-foreground))' }}
             />
           </PieChart>
         </ResponsiveContainer>
