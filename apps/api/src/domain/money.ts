@@ -24,6 +24,9 @@ export class Money {
   }
 
   add(other: Money): Money {
+    if (other.currency !== this.currency) {
+      throw new InvalidMoneyError(`cannot add ${this.currency} and ${other.currency}`);
+    }
     return Money.fromMinor(this.amountMinor + other.amountMinor, this.currency);
   }
 
