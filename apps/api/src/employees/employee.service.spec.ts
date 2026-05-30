@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { DeepMockProxy, mockDeep } from 'vitest-mock-extended';
 import { PrismaService } from '../prisma/prisma.service';
@@ -113,6 +113,28 @@ describe('EmployeeService', () => {
 
       expect(prisma.employee.findMany).toHaveBeenCalledWith(
         expect.objectContaining({ where: { country: 'US' } }),
+      );
+    });
+
+    it('rejects a salary range where min is greater than max', async () => {
+      await expect(service.list({ salaryMin: 5_000_000, salaryMax: 1_000_000 })).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(prisma.employee.findMany).not.toHaveBeenCalled();
+    });
+
+    it('matches name or email when searching', async () => {
+      prisma.employee.findMany.mockResolvedValue([] as never);
+      prisma.employee.count.mockResolvedValue(0 as never);
+
+      await service.list({ search: 'ada' });
+
+      expect(prisma.employee.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            OR: [{ name: { contains: 'ada' } }, { email: { contains: 'ada' } }],
+          },
+        }),
       );
     });
   });
