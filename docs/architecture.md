@@ -4,6 +4,54 @@ _Design overview and the trade-offs behind it._
 
 ## System Overview
 
+```mermaid
+flowchart TB
+    user["HR Manager (browser)"]
+
+    subgraph spa["React + Vite SPA"]
+        pages["Dashboard · Employees · Analytics"]
+        query["TanStack Query (server-state cache)"]
+    end
+
+    subgraph api["NestJS API"]
+        ctrl["Controllers (thin: DTO validation)"]
+        svc["Services (salary rules, filters, aggregation)"]
+        prisma["PrismaService (single DB gateway)"]
+    end
+
+    db[("SQLite<br/>(Postgres-portable)")]
+
+    user --> spa
+    pages --> query
+    query -->|"REST /api/*  JSON"| ctrl
+    ctrl --> svc
+    svc --> prisma
+    prisma -->|"parameterized queries<br/>groupBy / aggregate"| db
+```
+
+### Deployment topology
+
+```mermaid
+flowchart LR
+    client["Browser"]
+    dns["Vercel DNS<br/>incubyte-assignment.autoreels.in"]
+    client -.resolves.-> dns
+
+    subgraph vm["GCP VM — docker-compose"]
+        caddy["caddy<br/>:80/:443 · auto HTTPS"]
+        web["web<br/>nginx + built SPA"]
+        apiC["api<br/>NestJS + Prisma"]
+        vol[("volume:<br/>SQLite")]
+        caddy -->|"/*"| web
+        caddy -->|"/api/*"| apiC
+        apiC --- vol
+    end
+
+    client -->|HTTPS| caddy
+```
+
+### Detailed view
+
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
 │                            Browser (HR Manager)                        │

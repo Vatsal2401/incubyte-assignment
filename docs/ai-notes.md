@@ -48,14 +48,54 @@ Before the redesign I researched current admin-dashboard best practices (shadcn/
 
 ## Notable prompts
 
-Capture prompts/instructions worth showing a reviewer (the ones that shaped architecture or
-caught a bug). Keep them short and link to the resulting commit where useful.
+Representative instructions I gave the AI. The pattern was **process-first** — I had it build and
+follow reusable workflows (`.claude/commands/`) rather than one-shot "write the app" prompts.
 
-- _(add as you go)_
+1. **Encode the process before any code:**
+   > "Create a `/tdd` command that drives strict red → green → refactor with a *separate commit per
+   > phase*, following Incubyte's TDD approach. No production code without a failing test first."
+
+   → produced `.claude/commands/tdd.md`, which every feature below was built through.
+
+2. **Drive each feature test-first, one behavior at a time:**
+   > "TDD the Money value object: format minor units as currency, reject negative, reject
+   > fractional, add same-currency, refuse to add different currencies — each behavior as its own
+   > red `test:` commit then green `feat:` commit."
+
+   → the `money.spec.ts` / `money.ts` commit pairs.
+
+3. **Push work back when it cut a corner:**
+   > "You bundled the scaffold into one big commit — that hides the evolution. Break it into small
+   > logical commits, and from now on commit every red/green/refactor step separately."
+
+   → corrected the commit cadence for the rest of the build.
+
+4. **Research before building the UI, don't just generate it:**
+   > "Implement a proper product UI — sidebar, multi-page dashboard, theme — not a single page. Do
+   > in-depth research on current admin-dashboard patterns first, then implement."
+
+   → web search → config-first nav, shared `AppShell`, dark mode, recharts (see the UI decision row).
+
+5. **Verify the real experience, not just units:**
+   > "Add a `/ui-test` workflow that drives the running app in a real browser via the Browser MCP —
+   > walk the HR-manager journeys, screenshot, and report console/UX issues."
+
+   → caught a real rendering bug live (stale-Tailwind sidebar) that unit tests never would.
+
+6. **Deploy as separate services:**
+   > "Use docker-compose with a Dockerfile for the frontend *and* the backend, deploy on the GCP VM,
+   > and manage the subdomain via Vercel DNS over the CLI."
+
+   → `apps/api/Dockerfile` + `apps/web/Dockerfile` + `caddy`, live behind HTTPS.
 
 ## Trade-offs & things deliberately left out
 
-Cross-reference `docs/requirements.md` (scope) and `docs/architecture.md` (design). Note here any
-place where AI proposed something I cut for scope/time and why.
+Cross-reference `docs/requirements.md` (scope) and `docs/architecture.md` (design).
 
-- _(add as you go)_
+- **Auth/RBAC, salary history, payroll, FX conversion, org hierarchy** — cut deliberately; reasoning
+  in `docs/requirements.md` ("Out of Scope — and WHY").
+- **DRY-ing the two `headcountBy*` analytics methods** — AI could parameterize them into one, but
+  that forces an untyped Prisma `groupBy` cast; kept them explicit (a little duplication beat the
+  wrong abstraction).
+- **Splitting the SPA onto a CDN/Vercel** — considered, but docker-compose with the API + a static
+  nginx behind Caddy keeps the whole stack in one reviewable place for this exercise.
