@@ -14,9 +14,15 @@
     "test:watch": "npm run test:watch --workspace @acme/api",
     "build": "npm run build --workspaces --if-present",
     "seed": "npm run seed --workspace @acme/api",
-    "dev": "npm run dev --workspace @acme/api"
+    "dev": "concurrently -n api,web -c blue,magenta \"npm run dev --workspace @acme/api\" \"npm run dev --workspace @acme/web\"",
+    "build:web:prod": "VITE_API_BASE_URL=/api npm run build --workspace @acme/web",
+    "stage:web": "rm -rf apps/api/public && cp -r apps/web/dist apps/api/public",
+    "build:prod": "npm run build --workspace @acme/api && npm run build:web:prod && npm run stage:web"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
