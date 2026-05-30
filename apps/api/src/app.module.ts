@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
+import { AnalyticsModule } from './analytics/analytics.module';
 import { EmployeeModule } from './employees/employee.module';
 import { PrismaModule } from './prisma/prisma.module';
 
-// Root module. Feature modules (employees, analytics) are added as they are built via TDD.
+// Root module wiring the feature modules built via TDD.
 @Module({
-  imports: [PrismaModule, EmployeeModule],
+  imports: [PrismaModule, EmployeeModule, AnalyticsModule],
   controllers: [],
   providers: [],
 })
