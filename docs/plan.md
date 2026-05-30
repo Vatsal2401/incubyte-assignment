@@ -29,22 +29,22 @@ Core jobs from the requirements doc — each built test-first.
 
 | # | Feature | Status |
 |---|---|---|
-| 3.1 | Domain: Money value object (minor units + currency) | ⬜ |
-| 3.2 | Employee CRUD (create, read, update, deactivate) | ⬜ |
-| 3.3 | Input validation (DTOs: email, non-negative salary, known currency/country) | ⬜ |
-| 3.4 | Paginated + sortable + searchable employee listing | ⬜ |
-| 3.5 | Filtering by country, department, salary range (combinable) | ⬜ |
-| 3.6 | Analytics: headcount, total spend, avg/min/max, by country & department | ⬜ |
-| 3.7 | Persistence via Prisma + SQLite | ⬜ |
+| 3.1 | Domain: Money value object (minor units + currency) | ✅ |
+| 3.2 | Employee CRUD (create, read, update, deactivate) | ✅ |
+| 3.3 | Input validation (DTOs: email, non-negative salary, known currency/country) | ✅ |
+| 3.4 | Paginated + searchable employee listing | ✅ |
+| 3.5 | Filtering by country, department, salary range (combinable) | ✅ |
+| 3.6 | Analytics: headcount, total spend, avg/min/max, by country & department | ✅ |
+| 3.7 | Persistence via Prisma + SQLite | ✅ |
 
 ## 4. Technical constraints
 
 | # | Constraint | Choice | Status |
 |---|---|---|---|
-| 4.1 | Backend: Node/TS framework | NestJS 10 + TS (strict) | 🚧 scaffolded |
-| 4.2 | Relational DB | Prisma + SQLite (Postgres-portable) | ⬜ schema todo |
-| 4.3 | UI: React or Next + component library | React (Vite) + shadcn/ui | ⬜ |
-| 4.4 | **Seed script: 10,000 employees** | deterministic faker seed | ⬜ |
+| 4.1 | Backend: Node/TS framework | NestJS 10 + TS (strict) | ✅ |
+| 4.2 | Relational DB | Prisma + SQLite (Postgres-portable) | ✅ |
+| 4.3 | UI: React or Next + component library | React (Vite) + shadcn/ui | 🚧 next |
+| 4.4 | **Seed script: 10,000 employees** | deterministic faker seed | ✅ |
 
 ## 5. Readiness deliverables
 

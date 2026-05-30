@@ -29,6 +29,12 @@ corrected an AI suggestion.
 |---|---|---|---|
 | 2026-05-30 | Database | (open) Supabase or SQLite | **SQLite + Prisma**, Postgres-portable schema — zero-setup offline DX for reviewers, deterministic tests/seed; one-line swap to Postgres if a hosted deploy is needed later. |
 | 2026-05-30 | `.claude` tooling scope | Could port the full saleshandy-edge rig (6 agents, domain skills) | Brought only the pieces that map to the grading rubric; **deliberately skipped** the heavy e2e/spec/coverage agents and NestJS-specific skills as over-engineering for this scope. |
+| 2026-05-30 | Analytics headcount helpers | AI could DRY `headcountByCountry`/`ByDepartment` into one parameterized method | Kept them explicit — parameterizing Prisma's typed `groupBy` forces an untyped cast; a little duplication beat the wrong (untyped) abstraction. |
+| 2026-05-30 | Combined analytics endpoint | Three separate endpoints | One `GET /analytics/overview` running 3 aggregations via `Promise.all` — one round-trip for the dashboard, better UX. |
+
+### Lessons / corrections during the build
+
+- **Run the *full* gate, not just `vitest`.** SWC transpiles tests without type-checking, so a Prisma `groupBy` mock-typing error passed the test run but failed `tsc`. Fixed with a typed mock cast (`fix:` commit) and now run typecheck+lint+test each cycle. This is exactly why the `/verify` gate exists.
 
 ## Notable prompts
 
