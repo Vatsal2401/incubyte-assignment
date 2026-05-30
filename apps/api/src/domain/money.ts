@@ -2,6 +2,8 @@ import { InvalidMoneyError } from './errors';
 
 export type CurrencyCode = 'USD' | 'INR' | 'EUR' | 'GBP' | 'AUD';
 
+export const SUPPORTED_CURRENCIES: readonly CurrencyCode[] = ['USD', 'INR', 'EUR', 'GBP', 'AUD'];
+
 /**
  * Immutable money value object. Amounts are held as integer minor units
  * (e.g. cents) paired with a currency, so there is no floating-point drift
