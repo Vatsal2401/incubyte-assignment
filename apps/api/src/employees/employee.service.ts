@@ -1,7 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Employee } from '@prisma/client';
+import { Employee, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateEmployeeInput } from './employee.types';
+import {
+  CreateEmployeeInput,
+  DEFAULT_PAGE,
+  DEFAULT_PAGE_SIZE,
+  ListEmployeesQuery,
+  Paginated,
+} from './employee.types';
 
 @Injectable()
 export class EmployeeService {
@@ -17,5 +23,23 @@ export class EmployeeService {
       throw new NotFoundException(`Employee ${id} not found`);
     }
     return employee;
+  }
+
+  async list(query: ListEmployeesQuery): Promise<Paginated<Employee>> {
+    const page = query.page ?? DEFAULT_PAGE;
+    const pageSize = query.pageSize ?? DEFAULT_PAGE_SIZE;
+    const where: Prisma.EmployeeWhereInput = {};
+
+    const [items, total] = await Promise.all([
+      this.prisma.employee.findMany({
+        where,
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.employee.count({ where }),
+    ]);
+
+    return { items, total, page, pageSize };
   }
 }

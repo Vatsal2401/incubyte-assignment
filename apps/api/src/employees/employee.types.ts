@@ -10,3 +10,23 @@ export interface CreateEmployeeInput {
   salaryMinor: number;
   hireDate: Date;
 }
+
+export interface ListEmployeesQuery {
+  page?: number;
+  pageSize?: number;
+  country?: string;
+  department?: string;
+  salaryMin?: number;
+  salaryMax?: number;
+  search?: string;
+}
+
+export interface Paginated<T> {
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export const DEFAULT_PAGE = 1;
+export const DEFAULT_PAGE_SIZE = 25;
