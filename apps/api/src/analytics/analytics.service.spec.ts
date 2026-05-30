@@ -1,7 +1,13 @@
 import { Test } from '@nestjs/testing';
+import { Mock } from 'vitest';
 import { DeepMockProxy, mockDeep } from 'vitest-mock-extended';
 import { PrismaService } from '../prisma/prisma.service';
 import { AnalyticsService } from './analytics.service';
+
+// Prisma's groupBy has a heavily-overloaded generic signature that the deep
+// mock can't expose as a plain Mock, so cast it for the mock setup calls.
+const groupByMock = (prisma: DeepMockProxy<PrismaService>): Mock =>
+  prisma.employee.groupBy as unknown as Mock;
 
 describe('AnalyticsService', () => {
   let service: AnalyticsService;
@@ -17,7 +23,7 @@ describe('AnalyticsService', () => {
 
   describe('summaryByCurrency', () => {
     it('aggregates headcount, total spend and avg/min/max per currency for active employees', async () => {
-      prisma.employee.groupBy.mockResolvedValue([
+      groupByMock(prisma).mockResolvedValue([
         {
           currency: 'USD',
           _count: { _all: 2 },
@@ -54,7 +60,7 @@ describe('AnalyticsService', () => {
 
   describe('headcountByCountry', () => {
     it('counts active employees per country, most populous first', async () => {
-      prisma.employee.groupBy.mockResolvedValue([
+      groupByMock(prisma).mockResolvedValue([
         { country: 'IN', _count: { _all: 5 } },
         { country: 'US', _count: { _all: 3 } },
       ] as never);
@@ -76,7 +82,7 @@ describe('AnalyticsService', () => {
 
   describe('headcountByDepartment', () => {
     it('counts active employees per department, largest first', async () => {
-      prisma.employee.groupBy.mockResolvedValue([
+      groupByMock(prisma).mockResolvedValue([
         { department: 'Engineering', _count: { _all: 8 } },
         { department: 'Sales', _count: { _all: 4 } },
       ] as never);
@@ -98,7 +104,7 @@ describe('AnalyticsService', () => {
 
   describe('overview', () => {
     it('combines the currency summary with country and department breakdowns', async () => {
-      prisma.employee.groupBy.mockImplementation((args: { by: string[] }) => {
+      groupByMock(prisma).mockImplementation((args: { by: string[] }) => {
         if (args.by[0] === 'currency') {
           return Promise.resolve([
             {
