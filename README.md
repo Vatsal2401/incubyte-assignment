@@ -7,9 +7,10 @@ manage salary data and answer questions about how the org pays people.
 > Built as an Incubyte take-home with **strict TDD** and **incremental commits** — the git
 > history is meant to be read top-to-bottom to see how the solution evolved.
 
-## Live demo
+## Live demo & video
 
-👉 **https://incubyte-assignment.autoreels.in**
+- 🌐 **Live app:** https://incubyte-assignment.autoreels.in
+- 🎥 **Video walkthrough:** https://www.loom.com/share/4ac1643647b446bb94ddaed59f55c79b
 
 Seeded with 10,000 employees. Try the dashboard, filter the employee table, add/edit a record, and toggle dark mode.
 
