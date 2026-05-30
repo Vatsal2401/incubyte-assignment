@@ -1,0 +1,48 @@
+# Full stack: backend + frontend + reverse proxy, each its own service.
+#   caddy  → terminates HTTPS (auto Let's Encrypt) and routes:
+#              /api/* → api    (NestJS)
+#              /*     → web    (nginx serving the SPA)
+#   api    → NestJS + Prisma; SQLite persisted on a named volume
+#   web    → nginx serving the built React app
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=file:/data/prod.db
+      - PORT=3000
+    volumes:
+      - api-data:/data
+    expose:
+      - '3000'
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - api
+    expose:
+      - '80'
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - api
+      - web
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  api-data:
+  caddy-data:
+  caddy-config:

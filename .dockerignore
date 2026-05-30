@@ -1,0 +1,17 @@
+node_modules
+**/node_modules
+dist
+**/dist
+apps/api/public
+apps/web/dist
+**/*.db
+**/*.db-journal
+**/*.sqlite
+.git
+.github
+.env
+**/.env
+coverage
+**/coverage
+.claude
+*.log
