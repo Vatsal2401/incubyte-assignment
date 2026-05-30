@@ -21,4 +21,11 @@ describe('Money', () => {
     expect(total.amountMinor).toBe(750_000);
     expect(total.currency).toBe('USD');
   });
+
+  it('refuses to add amounts of different currencies', () => {
+    const usd = Money.fromMinor(500_000, 'USD');
+    const inr = Money.fromMinor(500_000, 'INR');
+
+    expect(() => usd.add(inr)).toThrow('cannot add USD and INR');
+  });
 });
