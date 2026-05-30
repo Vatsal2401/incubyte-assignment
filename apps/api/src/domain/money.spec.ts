@@ -10,4 +10,8 @@ describe('Money', () => {
   it('rejects a negative amount', () => {
     expect(() => Money.fromMinor(-1, 'USD')).toThrow('amount cannot be negative');
   });
+
+  it('rejects a fractional (non-integer) minor amount', () => {
+    expect(() => Money.fromMinor(100.5, 'USD')).toThrow('amount must be an integer');
+  });
 });
