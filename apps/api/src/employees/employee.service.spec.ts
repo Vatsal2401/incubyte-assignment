@@ -52,4 +52,35 @@ describe('EmployeeService', () => {
 
     await expect(service.findOne('missing')).rejects.toThrow(NotFoundException);
   });
+
+  describe('list', () => {
+    const row = { id: 'emp_1', status: 'active', ...baseInput };
+
+    it('returns a page with default pagination (page 1, size 25)', async () => {
+      prisma.employee.findMany.mockResolvedValue([row] as never);
+      prisma.employee.count.mockResolvedValue(1 as never);
+
+      const result = await service.list({});
+
+      expect(prisma.employee.findMany).toHaveBeenCalledWith({
+        where: {},
+        skip: 0,
+        take: 25,
+        orderBy: { createdAt: 'desc' },
+      });
+      expect(result).toEqual({ items: [row], total: 1, page: 1, pageSize: 25 });
+    });
+
+    it('computes skip from page and pageSize', async () => {
+      prisma.employee.findMany.mockResolvedValue([] as never);
+      prisma.employee.count.mockResolvedValue(120 as never);
+
+      const result = await service.list({ page: 3, pageSize: 20 });
+
+      expect(prisma.employee.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({ skip: 40, take: 20 }),
+      );
+      expect(result).toMatchObject({ total: 120, page: 3, pageSize: 20 });
+    });
+  });
 });
