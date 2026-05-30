@@ -1,0 +1,22 @@
+{
+  "name": "acme-salary-management",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Employee salary management software for an HR Manager (Incubyte take-home)",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "lint:fix": "npm run lint:fix --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:watch": "npm run test:watch --workspace @acme/api",
+    "build": "npm run build --workspaces --if-present",
+    "seed": "npm run seed --workspace @acme/api",
+    "dev": "npm run dev --workspace @acme/api"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
