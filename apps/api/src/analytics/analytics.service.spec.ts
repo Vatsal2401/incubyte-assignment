@@ -95,4 +95,44 @@ describe('AnalyticsService', () => {
       ]);
     });
   });
+
+  describe('overview', () => {
+    it('combines the currency summary with country and department breakdowns', async () => {
+      prisma.employee.groupBy.mockImplementation((args: { by: string[] }) => {
+        if (args.by[0] === 'currency') {
+          return Promise.resolve([
+            {
+              currency: 'USD',
+              _count: { _all: 1 },
+              _sum: { salaryMinor: 10_000_00 },
+              _avg: { salaryMinor: 10_000_00 },
+              _min: { salaryMinor: 10_000_00 },
+              _max: { salaryMinor: 10_000_00 },
+            },
+          ]) as never;
+        }
+        if (args.by[0] === 'country') {
+          return Promise.resolve([{ country: 'US', _count: { _all: 1 } }]) as never;
+        }
+        return Promise.resolve([{ department: 'Engineering', _count: { _all: 1 } }]) as never;
+      });
+
+      const result = await service.overview();
+
+      expect(result).toEqual({
+        byCurrency: [
+          {
+            currency: 'USD',
+            headcount: 1,
+            totalMinor: 10_000_00,
+            averageMinor: 10_000_00,
+            minMinor: 10_000_00,
+            maxMinor: 10_000_00,
+          },
+        ],
+        byCountry: [{ key: 'US', headcount: 1 }],
+        byDepartment: [{ key: 'Engineering', headcount: 1 }],
+      });
+    });
+  });
 });
