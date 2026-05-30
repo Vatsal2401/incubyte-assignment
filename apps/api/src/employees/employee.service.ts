@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Employee, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import {
@@ -44,6 +44,11 @@ export class EmployeeService {
   }
 
   private buildWhere(query: ListEmployeesQuery): Prisma.EmployeeWhereInput {
+    const { salaryMin, salaryMax } = query;
+    if (salaryMin !== undefined && salaryMax !== undefined && salaryMin > salaryMax) {
+      throw new BadRequestException('salaryMin cannot be greater than salaryMax');
+    }
+
     const where: Prisma.EmployeeWhereInput = {};
     if (query.country) {
       where.country = query.country;
@@ -51,11 +56,17 @@ export class EmployeeService {
     if (query.department) {
       where.department = query.department;
     }
-    if (query.salaryMin !== undefined || query.salaryMax !== undefined) {
+    if (salaryMin !== undefined || salaryMax !== undefined) {
       where.salaryMinor = {
-        ...(query.salaryMin !== undefined ? { gte: query.salaryMin } : {}),
-        ...(query.salaryMax !== undefined ? { lte: query.salaryMax } : {}),
+        ...(salaryMin !== undefined ? { gte: salaryMin } : {}),
+        ...(salaryMax !== undefined ? { lte: salaryMax } : {}),
       };
+    }
+    if (query.search) {
+      where.OR = [
+        { name: { contains: query.search } },
+        { email: { contains: query.search } },
+      ];
     }
     return where;
   }
