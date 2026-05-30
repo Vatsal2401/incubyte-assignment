@@ -1,12 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CurrencySummary, GroupCount } from './analytics.types';
+import { AnalyticsOverview, CurrencySummary, GroupCount } from './analytics.types';
 
 const ACTIVE = { status: 'active' };
 
 @Injectable()
 export class AnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
+
+  /** The full dashboard payload — three aggregations run in parallel. */
+  async overview(): Promise<AnalyticsOverview> {
+    const [byCurrency, byCountry, byDepartment] = await Promise.all([
+      this.summaryByCurrency(),
+      this.headcountByCountry(),
+      this.headcountByDepartment(),
+    ]);
+    return { byCurrency, byCountry, byDepartment };
+  }
 
   /**
    * Headcount and salary stats grouped by currency. Salaries are never summed

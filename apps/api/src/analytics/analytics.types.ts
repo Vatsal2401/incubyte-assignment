@@ -11,3 +11,9 @@ export interface GroupCount {
   key: string;
   headcount: number;
 }
+
+export interface AnalyticsOverview {
+  byCurrency: CurrencySummary[];
+  byCountry: GroupCount[];
+  byDepartment: GroupCount[];
+}
