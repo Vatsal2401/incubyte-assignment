@@ -73,4 +73,26 @@ describe('AnalyticsService', () => {
       ]);
     });
   });
+
+  describe('headcountByDepartment', () => {
+    it('counts active employees per department, largest first', async () => {
+      prisma.employee.groupBy.mockResolvedValue([
+        { department: 'Engineering', _count: { _all: 8 } },
+        { department: 'Sales', _count: { _all: 4 } },
+      ] as never);
+
+      const result = await service.headcountByDepartment();
+
+      expect(prisma.employee.groupBy).toHaveBeenCalledWith({
+        by: ['department'],
+        where: { status: 'active' },
+        _count: { _all: true },
+        orderBy: { _count: { department: 'desc' } },
+      });
+      expect(result).toEqual([
+        { key: 'Engineering', headcount: 8 },
+        { key: 'Sales', headcount: 4 },
+      ]);
+    });
+  });
 });
