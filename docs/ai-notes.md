@@ -15,6 +15,9 @@ I drove development through a custom Claude Code workflow committed in `.claude/
 - **`code-reviewer` agent + `/review`** — an independent AI pass reviews each feature diff against
   those rules before merge.
 - **`/verify`** — runs typecheck + lint + test + build as a gate before committing the green step.
+- **`/ui-test`** — drives the running app in a real browser via the Browser MCP, walking the
+  HR-Manager journeys (dashboard, filters, add/edit, theme, responsive), capturing screenshots, and
+  flagging console/usability issues. UI/UX testing of the actual experience, complementing the unit suite.
 
 Rationale: rather than one-shot "build me an app" prompting, I encoded the *process* (TDD, small
 commits, review) into reusable tooling and delegated execution to it. The tooling itself is a

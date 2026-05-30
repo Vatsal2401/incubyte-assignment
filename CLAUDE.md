@@ -71,6 +71,9 @@ Run from the repo root. The `/verify` command runs all of these in sequence.
 - **Document AI usage as you go** in `docs/ai-notes.md` — it's a graded artifact, not an afterthought.
 - **Verify before committing the green step:** `/verify` (or at least typecheck + the relevant tests).
 - **Review before merge:** `/review` dispatches the `code-reviewer` agent against the diff.
+- **UI/UX test in a real browser:** `/ui-test` drives the running app via the Browser MCP — walks the
+  HR-Manager journeys (dashboard, filters, add/edit, theme, responsive), captures screenshots, and
+  flags console/usability issues. Complements the Vitest unit suite.
 
 ## Coding Rules (imported — auto-loaded)
 
