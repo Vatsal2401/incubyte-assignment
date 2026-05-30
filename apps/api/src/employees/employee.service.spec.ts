@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { DeepMockProxy, mockDeep } from 'vitest-mock-extended';
 import { PrismaService } from '../prisma/prisma.service';
@@ -34,5 +35,21 @@ describe('EmployeeService', () => {
 
     expect(prisma.employee.create).toHaveBeenCalledWith({ data: baseInput });
     expect(result).toEqual(created);
+  });
+
+  it('returns an employee by id', async () => {
+    const employee = { id: 'emp_1', status: 'active', ...baseInput };
+    prisma.employee.findUnique.mockResolvedValue(employee as never);
+
+    const result = await service.findOne('emp_1');
+
+    expect(prisma.employee.findUnique).toHaveBeenCalledWith({ where: { id: 'emp_1' } });
+    expect(result).toEqual(employee);
+  });
+
+  it('throws NotFound when the employee does not exist', async () => {
+    prisma.employee.findUnique.mockResolvedValue(null as never);
+
+    await expect(service.findOne('missing')).rejects.toThrow(NotFoundException);
   });
 });
