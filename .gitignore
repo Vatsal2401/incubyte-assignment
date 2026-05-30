@@ -8,6 +8,9 @@ dist/
 build/
 *.tsbuildinfo
 
+# Staged SPA served by the API in the single-container build
+apps/api/public/
+
 # Test / coverage
 coverage/
 .vitest/

@@ -1,6 +1,8 @@
 import type { CurrencyCode } from './format';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '';
+// In the single-container deploy the SPA and API share an origin under /api.
+// In dev, VITE_API_BASE_URL points at the standalone API.
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? '/api';
 
 export interface Employee {
   id: string;
